@@ -392,27 +392,29 @@
             font-family: 'Cairo', Arial, sans-serif; /* إضافة الخط الجديد */
             direction: rtl;
             margin: 20px;
-            background-color: #011C44;
+            background-color: #1a1a2e; /* أزرق داكن مائل للبنفسجي */
         }
 
         h1 {
             text-align: center;
             margin-bottom: 20px;
+            color: #f1f1f1; /* نص أبيض لسهولة القراءة */
         }
 
         .form-container {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            background-color: #022020;
+            background-color: #2a2a3b; /* لون داكن مع تدرج أزرق */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .form-container label {
             font-size: 16px;
             margin-bottom: 5px;
+            color: #f1f1f1; /* نص أبيض لسهولة القراءة */
         }
 
         .form-container input, .form-container button {
@@ -420,27 +422,28 @@
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
-            border: 1px solid #022020;
+            border: 1px solid #444;
         }
 
         .form-container input[type="text"] {
-            background-color: #011C44;
+            background-color: #2a2a3b; /* تدرج لون داكن مع الخلفية */
+            color: #f1f1f1; /* نص أبيض داخل المدخلات */
         }
 
         button {
-            background-color: #007bff;
+            background-color: #ff6f61; /* برتقالي دافئ */
             color: white;
             font-size: 16px;
             cursor: pointer;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #d64e42; /* تأثير تفاعل عند المرور */
         }
 
         .output {
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
+            background-color: #f1f1f1; /* لون فاتح للمخرجات لزيادة الوضوح */
+            border: 1px solid #ddd;
             padding: 20px;
             margin-top: 20px;
             border-radius: 5px;
@@ -451,7 +454,7 @@
             width: 100%;
             height: 200px;
             border: none;
-            background-color: #f4f4f4;
+            background-color: #eaeaea;
             padding: 10px;
             font-family: monospace;
             color: #333;
@@ -460,10 +463,12 @@
 
         .output button {
             margin-top: 10px;
+            background-color: #ff6f61; /* نفس لون الأزرار */
+            color: white;
         }
 
         .movie-details, .server-details {
-            background-color: #f2f2f2;
+            background-color: #3b3b5c; /* لون داكن مع تدرج أزرق */
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
@@ -472,12 +477,13 @@
         .movie-details h2, .server-details h2 {
             margin-top: 0;
             font-size: 18px;
+            color: #f1f1f1;
         }
 
         .server-buttons button {
             margin: 5px;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #ff6f61; /* لون الأزرار برتقالي */
             color: white;
             border: none;
             cursor: pointer;
@@ -485,11 +491,11 @@
         }
 
         .server-buttons button:hover {
-            background-color: #0056b3;
+            background-color: #d64e42;
         }
 
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet"> <!-- إضافة رابط الخط Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>لوحة توليد الأفلام</h1>
