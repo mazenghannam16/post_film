@@ -3,14 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ابحث عن فيلم تريدة</title>
+    <title>ابحث عن فيلم أو مسلسل</title>
     <style>
         body {
             font-family: 'Cairo', sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #310003; /* خلفية سوداء */
-            color: #fff; /* نص أبيض */
+            background-color: #310003;
+            color: #fff;
+        }
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        .search-container input {
+            padding: 12px;
+            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            border: none;
+            border-radius: 5px;
+            width: 250px;
+            outline: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .search-container input:focus {
+            border: 2px solid #f1c40f;
+        }
+        .search-container button {
+            padding: 12px;
+            font-size: 16px;
+            font-family: 'Cairo', sans-serif;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f1c40f;
+            color: #310003;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .search-container button:hover {
+            background-color: #e67e22;
         }
         #result {
             margin-top: 20px;
@@ -18,12 +59,6 @@
         img {
             max-width: 200px;
             margin-top: 10px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-            font-family: 'Cairo', sans-serif; /* خط عربي */
         }
         .info-row {
             margin-top: 10px;
@@ -33,75 +68,203 @@
         }
         .info-row button {
             margin-left: 10px;
+            background-color: #f1c40f;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            color: #310003;
+            transition: background-color 0.3s;
+        }
+        .info-row button:hover {
+            background-color: #e67e22;
+        }
+        .input-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        textarea {
+            width: 300px;
+            height: 100px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #310003;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            resize: none;
+        }
+        .cast-list {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        .cast-item {
+            margin-top: 10px;
         }
     </style>
-    <!-- استيراد خط عربي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>ابحث عن فيلم تريدة</h1>
-    <input type="text" id="searchTerm" placeholder="بحث عن فيلم تريدة">
-    <button onclick="searchMovie()">بحث</button>
+    <h1>ابحث عن فيلم أو مسلسل</h1>
+    <div class="search-container">
+        <input type="text" id="searchTerm" placeholder="ابحث عن فيلم أو مسلسل بالاسم أو ID">
+        <button onclick="searchMovieByName()">بحث بالاسم</button>
+        <button onclick="searchMovieById()">بحث بالـ ID</button>
+    </div>
 
     <div id="result"></div>
 
     <script>
-        async function searchMovie() {
-            const apiKey = '4b1125dc507cd0f303b025b30d6311dd'; // مفتاح الـ API الخاص بك
+        const apiKey = '4b1125dc507cd0f303b025b30d6311dd';
+
+        // البحث باستخدام الاسم
+        async function searchMovieByName() {
             const searchTerm = document.getElementById('searchTerm').value;
+            if (!searchTerm) {
+                alert('الرجاء إدخال اسم الفيلم أو المسلسل');
+                return;
+            }
+
             const url = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${searchTerm}&language=ar`;
 
-            const response = await fetch(url);
-            const data = await response.json();
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
 
-            if (data.results.length > 0) {
-                const result = data.results[0];
-                const title = result.title || result.name;
-                const description = result.overview || "لا يوجد وصف متاح";
-                const releaseDate = result.release_date || result.first_air_date || "غير متاح";
-                const imagePath = result.poster_path;
-                const imageUrl = `https://image.tmdb.org/t/p/w500${imagePath}`;
-                const mediaType = result.media_type;
-                const detailsUrl = `https://api.themoviedb.org/3/${mediaType}/${result.id}?api_key=${apiKey}&language=ar`;
+                if (data.results.length > 0) {
+                    const result = data.results[0];
+                    const title = result.title || result.name;
+                    const description = result.overview || "لا يوجد وصف متاح";
+                    const releaseDate = result.release_date || result.first_air_date || "غير متاح";
+                    const imagePath = result.poster_path;
+                    const imageUrl = `https://image.tmdb.org/t/p/w500${imagePath}`;
+                    const mediaType = result.media_type;
+                    const detailsUrl = `https://api.themoviedb.org/3/${mediaType}/${result.id}?api_key=${apiKey}&language=ar`;
 
-                const detailsResponse = await fetch(detailsUrl);
-                const detailsData = await detailsResponse.json();
-                const country = detailsData.production_countries?.[0]?.name || "غير متاح";
+                    const detailsResponse = await fetch(detailsUrl);
+                    const detailsData = await detailsResponse.json();
+                    const country = detailsData.production_countries?.[0]?.name || "غير متاح";
+                    const genres = detailsData.genres?.map(genre => genre.name).join(', ') || "غير متاح";
+                    const voteAverage = detailsData.vote_average || "غير متاح";
+                    const cast = detailsData.cast || [];
+                    const castList = cast.length > 0 ? cast.slice(0, 5).map(member => `<li class="cast-item">${member.name} (${member.character})</li>`).join('') : "لا يوجد معلومات عن الفريق";
 
-                document.getElementById('result').innerHTML = `
-                    <h2>${title}</h2>
-                    <img src="${imageUrl}" alt="${title}">
-                    <div class="info-row">
-                        <strong>الوصف:</strong>
-                        <span id="description">${description}</span>
-                        <button onclick="copyText('description')">نسخ الوصف</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>تاريخ الإصدار:</strong>
-                        <span id="releaseDate">${releaseDate}</span>
-                        <button onclick="copyText('releaseDate')">نسخ تاريخ الإصدار</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>بلد التصوير:</strong>
-                        <span id="country">${country}</span>
-                        <button onclick="copyText('country')">نسخ بلد التصوير</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>رابط الصورة:</strong>
-                        <span id="imageUrl">${imageUrl}</span>
-                        <button onclick="copyText('imageUrl')">نسخ رابط الصورة</button>
-                    </div>
-                `;
-            } else {
-                document.getElementById('result').innerHTML = `<p>لم يتم العثور على نتائج.</p>`;
+                    document.getElementById('result').innerHTML = `
+                        <h2>${title}</h2>
+                        <img src="${imageUrl}" alt="${title}">
+                        <div class="info-row">
+                            <strong>الوصف:</strong>
+                            <textarea id="description">${description}</textarea>
+                            <button onclick="copyText('description')">نسخ الوصف</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>تاريخ الإصدار:</strong>
+                            <textarea id="releaseDate">${releaseDate}</textarea>
+                            <button onclick="copyText('releaseDate')">نسخ تاريخ الإصدار</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>بلد التصوير:</strong>
+                            <textarea id="country">${country}</textarea>
+                            <button onclick="copyText('country')">نسخ بلد التصوير</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>التصنيف:</strong>
+                            <textarea id="genres">${genres}</textarea>
+                            <button onclick="copyText('genres')">نسخ التصنيف</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>الدقة:</strong>
+                            <textarea id="voteAverage">${voteAverage}</textarea>
+                            <button onclick="copyText('voteAverage')">نسخ الدقة</button>
+                        </div>
+                        <div>
+                            <strong>رابط الصورة:</strong>
+                            <textarea id="imageUrl">${imageUrl}</textarea>
+                            <button onclick="copyText('imageUrl')">نسخ رابط الصورة</button>
+                        </div>
+                        <div>
+                            <h3>فريق العمل</h3>
+                            <ul class="cast-list">${castList}</ul>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>لم يتم العثور على نتائج.</p>`;
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('result').innerHTML = `<p>حدث خطأ أثناء البحث. الرجاء المحاولة مرة أخرى.</p>`;
             }
         }
 
-        function copyText(elementId) {
-            const text = document.getElementById(elementId).textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                alert(`تم نسخ ${text}`);
-            });
+        // البحث باستخدام الـ ID
+        async function searchMovieById() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            if (!searchTerm) {
+                alert('الرجاء إدخال ID الفيلم أو المسلسل');
+                return;
+            }
+
+            const url = `https://api.themoviedb.org/3/movie/${searchTerm}?api_key=${apiKey}&language=ar`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data && data.title) {
+                    const title = data.title;
+                    const description = data.overview || "لا يوجد وصف متاح";
+                    const releaseDate = data.release_date || "غير متاح";
+                    const imagePath = data.poster_path;
+                    const imageUrl = `https://image.tmdb.org/t/p/w500${imagePath}`;
+                    const genres = data.genres?.map(genre => genre.name).join(', ') || "غير متاح";
+                    const voteAverage = data.vote_average || "غير متاح";
+
+                    document.getElementById('result').innerHTML = `
+                        <h2>${title}</h2>
+                        <img src="${imageUrl}" alt="${title}">
+                        <div class="info-row">
+                            <strong>الوصف:</strong>
+                            <textarea id="description">${description}</textarea>
+                            <button onclick="copyText('description')">نسخ الوصف</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>تاريخ الإصدار:</strong>
+                            <textarea id="releaseDate">${releaseDate}</textarea>
+                            <button onclick="copyText('releaseDate')">نسخ تاريخ الإصدار</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>التصنيف:</strong>
+                            <textarea id="genres">${genres}</textarea>
+                            <button onclick="copyText('genres')">نسخ التصنيف</button>
+                        </div>
+                        <div class="info-row">
+                            <strong>الدقة:</strong>
+                            <textarea id="voteAverage">${voteAverage}</textarea>
+                            <button onclick="copyText('voteAverage')">نسخ الدقة</button>
+                        </div>
+                        <div>
+                            <strong>رابط الصورة:</strong>
+                            <textarea id="imageUrl">${imageUrl}</textarea>
+                            <button onclick="copyText('imageUrl')">نسخ رابط الصورة</button>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('result').innerHTML = `<p>لم يتم العثور على نتيجة بهذا الـ ID.</p>`;
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('result').innerHTML = `<p>حدث خطأ أثناء البحث. الرجاء المحاولة مرة أخرى.</p>`;
+            }
+        }
+
+        // دالة لنسخ النصوص
+        function copyText(id) {
+            const textArea = document.getElementById(id);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999); // للهواتف
+            document.execCommand("copy");
+            alert("تم نسخ النص إلى الحافظة!");
         }
     </script>
 </body>
@@ -114,69 +277,158 @@
     <title>لوحة توليد الأفلام</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Cairo', Arial, sans-serif; /* إضافة الخط الجديد */
             direction: rtl;
             margin: 20px;
+            background-color: #f4f4f4;
         }
-        textarea {
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container label {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .form-container input, .form-container button {
             width: 100%;
-            height: 200px;
-            margin-top: 10px;
-        }
-        label, input, button {
+            padding: 10px;
             margin: 10px 0;
-            display: block;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
+
+        .form-container input[type="text"] {
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         .output {
             background-color: #f9f9f9;
             border: 1px solid #ccc;
-            padding: 10px;
+            padding: 20px;
             margin-top: 20px;
+            border-radius: 5px;
+            width: 100%;
         }
+
+        .output textarea {
+            width: 100%;
+            height: 200px;
+            border: none;
+            background-color: #f4f4f4;
+            padding: 10px;
+            font-family: monospace;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .output button {
+            margin-top: 10px;
+        }
+
+        .movie-details, .server-details {
+            background-color: #f2f2f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .movie-details h2, .server-details h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .server-buttons button {
+            margin: 5px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .server-buttons button:hover {
+            background-color: #0056b3;
+        }
+
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600&display=swap" rel="stylesheet"> <!-- إضافة رابط الخط Cairo -->
 </head>
 <body>
     <h1>لوحة توليد الأفلام</h1>
-    <label>ضع صورة الفيلم:</label>
-    <input type="text" id="movieImage" placeholder="رابط صورة الفيلم">
-    
-    <label>اسم الفيلم:</label>
-    <input type="text" id="movieName" placeholder="اسم الفيلم">
-    
-    <label>سنة الإصدار هتتضاف بجانب اسم الفيلم</label>
-    <input type="text" id="releaseYear" placeholder="سنة الإصدار">
-    
-    <label>تصنيف الفيلم مثال: افلام عربي </label>
-    <input type="text" id="movieCategory" placeholder="تصنيف الفيلم (مفصولة بفواصل)">
-    
-    <label>الجودة:</label>
-    <input type="text" id="movieQuality" placeholder="جودة الفيلم">
-    
-    <label>بلد تصوير الفيلم:</label>
-    <input type="text" id="movieCountry" placeholder="بلد تصوير الفيلم">
-    
-    <label>لغة الفيلم:</label>
-    <input type="text" id="movieLanguage" placeholder="لغة الفيلم">
-    
-    <label>نوع الفيلم مثال: اكشن او دراما</label>
-    <input type="text" id="movieType" placeholder="نوع الفيلم">
-    
-    <label>دقة الفيلم:</label>
-    <input type="text" id="movieResolution" placeholder="دقة الفيلم">
-    
-    <label>تاريخ الإصدار:</label>
-    <input type="text" id="releaseDate" placeholder="تاريخ الإصدار">
-    
-    <label>روابط السيرفرات:</label>
-    <input type="text" id="server1" placeholder="رابط السيرفر 1">
-    <input type="text" id="server2" placeholder="رابط السيرفر 2">
-    <input type="text" id="server3" placeholder="رابط السيرفر 3">
 
-    <button onclick="generateCode()">توليد الكود</button>
+    <div class="form-container">
+        <label>ضع صورة الفيلم:</label>
+        <input type="text" id="movieImage" placeholder="رابط صورة الفيلم">
+
+        <label>اسم الفيلم:</label>
+        <input type="text" id="movieName" placeholder="اسم الفيلم">
+
+        <label>سنة الإصدار هتتضاف بجانب اسم الفيلم:</label>
+        <input type="text" id="releaseYear" placeholder="سنة الإصدار">
+
+        <label>تصنيف الفيلم مثال: افلام عربي:</label>
+        <input type="text" id="movieCategory" placeholder="تصنيف الفيلم (مفصولة بفواصل)">
+
+        <label>الجودة:</label>
+        <input type="text" id="movieQuality" placeholder="جودة الفيلم">
+
+        <label>بلد تصوير الفيلم:</label>
+        <input type="text" id="movieCountry" placeholder="بلد تصوير الفيلم">
+
+        <label>لغة الفيلم:</label>
+        <input type="text" id="movieLanguage" placeholder="لغة الفيلم">
+
+        <label>نوع الفيلم مثال: اكشن او دراما:</label>
+        <input type="text" id="movieType" placeholder="نوع الفيلم">
+
+        <label>دقة الفيلم:</label>
+        <input type="text" id="movieResolution" placeholder="دقة الفيلم">
+
+        <label>تاريخ الإصدار:</label>
+        <input type="text" id="releaseDate" placeholder="تاريخ الإصدار">
+
+        <label>وصف الفيلم:</label>
+        <input type="text" id="moviedescription" placeholder="وصف الفيلم">
+
+        <label>روابط السيرفرات:</label>
+        <input type="text" id="server1" placeholder="رابط السيرفر 1">
+        <input type="text" id="server2" placeholder="رابط السيرفر 2">
+        <input type="text" id="server3" placeholder="رابط السيرفر 3">
+
+        <button onclick="generateCode()">توليد الكود</button>
+    </div>
 
     <h2>الكود الناتج:</h2>
-    <textarea id="outputCode" readonly></textarea>
-    <button onclick="copyCode()">نسخ الكود</button>
+    <div class="output">
+        <textarea id="outputCode" readonly></textarea>
+        <button onclick="copyCode()">نسخ الكود</button>
+    </div>
 
     <script>
         function generateCode() {
@@ -190,88 +442,48 @@
             const movieType = document.getElementById('movieType').value;
             const movieResolution = document.getElementById('movieResolution').value;
             const releaseDate = document.getElementById('releaseDate').value;
+            const moviedescription = document.getElementById('moviedescription').value;
             const server1 = document.getElementById('server1').value;
             const server2 = document.getElementById('server2').value;
             const server3 = document.getElementById('server3').value;
 
             const generatedCode = `
-<div class="egy-single-post">
-    <div class="egy-post-top">
-        <div class="egy-post-right">
-            <img src="${movieImage}" width="90%" height="90%">
-            <a href="#" class="egy-post-watch"><i class="fa fa-cloud-download"></i> لا تنسي الدعاء لاخواتنا في فلسطين🇵🇸</a>
-        </div>
-        <div class="egy-post-left">
-            <h1 class="main-title">${movieName} <a href="#">(${releaseYear})</a></h1>
-            <ul>
-                <li>
-                    <label>التصنيف</label>
-                    <div>
-                        ${movieCategory.map(cat => `<a href="#">${cat.trim()}</a>`).join(' ')}
-                    </div>
-                </li>
-                <li>
-                    <label>الجودة</label>
-                    <div>
-                        <a href="#">${movieQuality}</a>
-                    </div>
-                </li>
-                <li>
-                    <label>البلد</label>
-                    <div>
-                        <a href="#">${movieCountry}</a>
-                    </div>
-                </li>
-                <li>
-                    <label>اللغة</label>
-                    <div>
-                        <a href="#">${movieLanguage}</a>
-                    </div>
-                </li>
-                <li>
-                    <label>النوع</label>
-                    <div>
-                        <a href="#">${movieType}</a>
-                    </div>
-                </li>
-                <li>
-                    <label>الدقة</label>
-                    <div>
-                        <a href="#">${movieResolution}</a>
-                    </div>
-                </li>
-                <li>
-                    <label>تاريخ الإصدار</label>
-                    <div>
-                        <span>${releaseDate}</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
+<div class="movie-details">
+    <h2>تفاصيل الفيلم</h2>
+    <img src="${movieImage}" width="100%" height="auto">
+    <h3>${movieName} <span>(${releaseYear})</span></h3>
+    <ul>
+        <li><strong>التصنيف:</strong> ${movieCategory.join(', ')}</li>
+        <li><strong>الجودة:</strong> ${movieQuality}</li>
+        <li><strong>البلد:</strong> ${movieCountry}</li>
+        <li><strong>اللغة:</strong> ${movieLanguage}</li>
+        <li><strong>النوع:</strong> ${movieType}</li>
+        <li><strong>الدقة:</strong> ${movieResolution}</li>
+        <li><strong>تاريخ الإصدار:</strong> ${releaseDate}</li>
+        <li><strong>الوصف:</strong> ${moviedescription}</li>
+    </ul>
+</div>
+
+<div class="server-details">
+    <h2>سيرفرات المشاهدة</h2>
+    <div class="server-buttons">
+        <button onclick="openServer('server01')">سيرفر 1</button>
+        <button onclick="openServer('server02')">سيرفر 2</button>
+        <button onclick="openServer('server03')">سيرفر 3</button>
     </div>
-    <div class="egy-server">
-        <h2 class="egy-server-title">سيرفرات المشاهدة</h2>
-        <div class="egy-server-content">
-            <div class="egy-server-list">
-                <button class="tablinks active" onclick="openCity(event, 'server01')">سيرفر 1</button>
-                <button class="tablinks" onclick="openCity(event, 'server02')">سيرفر 2</button>
-                <button class="tablinks" onclick="openCity(event, 'server03')">سيرفر 3</button>
-            </div>
-            <div class="egy-server-container">
-                <div class="tabcontent" id="server01" style="display: block;">
-                    <iframe src="${server1}" scrolling="no" frameborder="0" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="no-referrer"></iframe>
-                </div>
-                <div class="tabcontent" id="server02" style="display: none;">
-                    <iframe src="${server2}" scrolling="no" frameborder="0" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="no-referrer"></iframe>
-                </div>
-                <div class="tabcontent" id="server03" style="display: none;">
-                    <iframe src="${server3}" scrolling="no" frameborder="0" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" referrerpolicy="no-referrer"></iframe>
-                </div>
-            </div>
+    <div class="server-content">
+        <div id="server01" style="display:none;">
+            <iframe src="${server1}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div id="server02" style="display:none;">
+            <iframe src="${server2}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div id="server03" style="display:none;">
+            <iframe src="${server3}" width="100%" height="400" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 </div>`;
-            
+
             document.getElementById('outputCode').value = generatedCode;
         }
 
@@ -284,9 +496,3 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
