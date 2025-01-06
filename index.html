@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بحث عن فيلم أو مسلسل</title>
+    <title>ابحث عن فيلم تريدة</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Cairo', sans-serif;
             text-align: center;
             padding: 20px;
+            background-color: #310003; /* خلفية سوداء */
+            color: #fff; /* نص أبيض */
         }
         #result {
             margin-top: 20px;
@@ -21,6 +23,7 @@
             padding: 10px;
             margin: 5px;
             font-size: 16px;
+            font-family: 'Cairo', sans-serif; /* خط عربي */
         }
         .info-row {
             margin-top: 10px;
@@ -32,10 +35,12 @@
             margin-left: 10px;
         }
     </style>
+    <!-- استيراد خط عربي -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>ابحث عن فيلم أو مسلسل</h1>
-    <input type="text" id="searchTerm" placeholder="اكتب اسم الفيلم أو المسلسل">
+    <h1>ابحث عن فيلم تريدة</h1>
+    <input type="text" id="searchTerm" placeholder="بحث عن فيلم تريدة">
     <button onclick="searchMovie()">بحث</button>
 
     <div id="result"></div>
@@ -101,14 +106,12 @@
     </script>
 </body>
 </html>
-
-
 <!DOCTYPE html>
 <html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد افلام موقع اليكس بست</title>
+    <title>لوحة توليد الأفلام</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -133,7 +136,7 @@
     </style>
 </head>
 <body>
-    <h1>مولد افلام موقع اليكس بست</h1>
+    <h1>لوحة توليد الأفلام</h1>
     <label>ضع صورة الفيلم:</label>
     <input type="text" id="movieImage" placeholder="رابط صورة الفيلم">
     
@@ -281,6 +284,7 @@
     </script>
 </body>
 </html>
+
 
 
 
