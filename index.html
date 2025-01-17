@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>عمك مازززززن</title>
+    <title>MezoCima</title>
     <style>
         body {
             font-family: 'Cairo', sans-serif;
@@ -165,83 +165,7 @@
             const data = await response.json();
 
             if (data.results.length > 0) {
-                const result = data.results[0];
-                const title = result.title || result.name;
-                const description = result.overview || "لا يوجد وصف متاح";
-                const releaseDate = result.release_date || result.first_air_date || "غير متاح";
-                const imagePath = result.poster_path;
-                const imageUrl = `https://image.tmdb.org/t/p/original${imagePath}`;
-                const mediaType = result.media_type;
-                const detailsUrl = `https://api.themoviedb.org/3/${mediaType}/${result.id}?api_key=${apiKey}&language=ar`;
-
-                // طلب التفاصيل
-                const detailsResponse = await fetch(detailsUrl);
-                const detailsData = await detailsResponse.json();
-
-                const country = detailsData.production_countries?.[0]?.name || "غير متاح";
-                const genres = detailsData.genres?.map(genre => genre.name).join(', ') || "غير متاح";
-                const voteAverage = detailsData.vote_average || "غير متاح";
-                const originalLanguage = detailsData.original_language || "غير متاح";
-                const quality = "Full HD"; // يمكن ضبطه حسب المصدر.
-
-                // عرض المواسم إذا كان مسلسل
-                let seasonsSection = '';
-                if (mediaType === 'tv') {
-                    const seasons = detailsData.seasons || [];
-                    seasonsSection = seasons.map(season => `
-                        <div class="season-item">
-                            <img src="https://image.tmdb.org/t/p/original${season.poster_path}" alt="${season.name}" />
-                            <p>${season.name}</p>
-                            <button onclick="copyImageUrl('https://image.tmdb.org/t/p/original${season.poster_path}')">نسخ صورة الموسم</button>
-                        </div>
-                    `).join('');
-                }
-
-                document.getElementById('result').innerHTML = `
-                    <h2>${title}</h2>
-                    <img src="${imageUrl}" alt="${title}">
-                    <div class="info-row">
-                        <strong>الوصف:</strong>
-                        <textarea id="description">${description}</textarea>
-                        <button onclick="copyText('description')">نسخ الوصف</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>تاريخ الإصدار:</strong>
-                        <textarea id="releaseDate">${releaseDate}</textarea>
-                        <button onclick="copyText('releaseDate')">نسخ تاريخ الإصدار</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>بلد التصوير:</strong>
-                        <textarea id="country">${country}</textarea>
-                        <button onclick="copyText('country')">نسخ بلد التصوير</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>اللغة الأصلية:</strong>
-                        <textarea id="language">${originalLanguage}</textarea>
-                        <button onclick="copyText('language')">نسخ اللغة</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>التصنيف:</strong>
-                        <textarea id="genres">${genres}</textarea>
-                        <button onclick="copyText('genres')">نسخ التصنيف</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>التقييم:</strong>
-                        <textarea id="voteAverage">${voteAverage}</textarea>
-                        <button onclick="copyText('voteAverage')">نسخ التقييم</button>
-                    </div>
-                    <div class="info-row">
-                        <strong>الجودة:</strong>
-                        <textarea id="quality">${quality}</textarea>
-                        <button onclick="copyText('quality')">نسخ الجودة</button>
-                    </div>
-                    ${mediaType === 'tv' ? `
-                        <div>
-                            <h3>المواسم</h3>
-                            <div class="season-list">${seasonsSection}</div>
-                        </div>
-                    ` : ''}
-                `;
+                displayResult(data.results[0]);
             } else {
                 document.getElementById('result').innerHTML = `<p>لم يتم العثور على نتائج.</p>`;
             }
@@ -251,20 +175,86 @@
         }
     }
 
-    // دالة نسخ رابط الصورة
-    function copyImageUrl(url) {
-        navigator.clipboard.writeText(url).then(() => {
-            alert('تم نسخ رابط الصورة!');
-        }).catch(err => {
-            console.error('فشل النسخ', err);
-        });
+    async function searchMovieById() {
+        const searchTerm = document.getElementById('searchTerm').value;
+        if (!searchTerm) {
+            alert('الرجاء إدخال الـ ID');
+            return;
+        }
+
+        const url = `https://api.themoviedb.org/3/movie/${searchTerm}?api_key=${apiKey}&language=ar`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('لم يتم العثور على فيلم أو مسلسل بهذا الـ ID');
+            }
+
+            const data = await response.json();
+            displayResult(data);
+        } catch (error) {
+            console.error(error);
+            document.getElementById('result').innerHTML = `<p>${error.message}</p>`;
+        }
     }
 
-    // دالة لنسخ النصوص
+    function displayResult(result) {
+        const title = result.title || result.name;
+        const description = result.overview || "لا يوجد وصف متاح";
+        const releaseDate = result.release_date || result.first_air_date || "غير متاح";
+        const imagePath = result.poster_path;
+        const imageUrl = `https://image.tmdb.org/t/p/original${imagePath}`;
+        const country = result.production_countries?.[0]?.name || "غير متاح";
+        const genres = result.genres?.map(genre => genre.name).join(', ') || "غير متاح";
+        const voteAverage = result.vote_average || "غير متاح";
+        const originalLanguage = result.original_language || "غير متاح";
+        const quality = "Full HD";
+
+        document.getElementById('result').innerHTML = `
+            <h2>${title}</h2>
+            <img src="${imageUrl}" alt="${title}">
+            <div class="info-row">
+                <strong>الوصف:</strong>
+                <textarea id="description">${description}</textarea>
+                <button onclick="copyText('description')">نسخ الوصف</button>
+            </div>
+            <div class="info-row">
+                <strong>تاريخ الإصدار:</strong>
+                <textarea id="releaseDate">${releaseDate}</textarea>
+                <button onclick="copyText('releaseDate')">نسخ تاريخ الإصدار</button>
+            </div>
+            <div class="info-row">
+                <strong>بلد التصوير:</strong>
+                <textarea id="country">${country}</textarea>
+                <button onclick="copyText('country')">نسخ بلد التصوير</button>
+            </div>
+            <div class="info-row">
+                <strong>اللغة الأصلية:</strong>
+                <textarea id="language">${originalLanguage}</textarea>
+                <button onclick="copyText('language')">نسخ اللغة</button>
+            </div>
+            <div class="info-row">
+                <strong>التصنيف:</strong>
+                <textarea id="genres">${genres}</textarea>
+                <button onclick="copyText('genres')">نسخ التصنيف</button>
+            </div>
+            <div class="info-row">
+                <strong>التقييم:</strong>
+                <textarea id="voteAverage">${voteAverage}</textarea>
+                <button onclick="copyText('voteAverage')">نسخ التقييم</button>
+            </div>
+            <div class="info-row">
+                <strong>الجودة:</strong>
+                <textarea id="quality">${quality}</textarea>
+                <button onclick="copyText('quality')">نسخ الجودة</button>
+            </div>
+        `;
+    }
+
     function copyText(id) {
         const textArea = document.getElementById(id);
         textArea.select();
-        textArea.setSelectionRange(0, 99999); // للهواتف
+        textArea.setSelectionRange(0, 99999);
         document.execCommand("copy");
         alert("تم نسخ النص إلى الحافظة!");
     }
@@ -450,3 +440,6 @@
     </script>
 </body>
 </html>
+
+
+
