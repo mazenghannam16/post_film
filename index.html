@@ -3,22 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مولد نشر الفيلم</title>
+    <title>مولد نشر الافلام</title>
     <style>
-        body { font-family: Arial, sans-serif; }
-        .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, textarea { width: 100%; padding: 10px; font-size: 16px; margin-bottom: 10px; }
-        button { padding: 10px 20px; font-size: 16px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        pre { background-color: #f4f4f4; padding: 20px; border-radius: 5px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #124364;
+            color: white;
+            text-align: center;
+        }
+        h1 {
+            font-weight: bold;
+            font-size: 2.5em;
+        }
+        .container { 
+            width: 100%; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-size: 1.2em; 
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            font-size: 16px; 
+            margin-bottom: 10px; 
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button { 
+            padding: 10px 20px; 
+            font-size: 16px; 
+            background-color: #4CAF50; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 5px;
+        }
+        button:hover { 
+            background-color: #45a049; 
+        }
+        pre { 
+            background-color: #f4f4f4; 
+            padding: 20px; 
+            border-radius: 5px; 
+            color: black;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>مولد نشر الفيلم</h1>
+        <h1>مولد نشر الأفلام </h1>
 
         <!-- الحقول الخاصة بتفاصيل الفيلم -->
         <div class="form-group">
@@ -48,7 +90,7 @@
         </div>
 
         <div class="form-group">
-            <label for="category">اسم القسم</label>
+            <label for="category">اسم القسم مثل(افلام عربية,افلام اجنبية)</label>
             <input type="text" id="category" placeholder="أدخل اسم القسم">
         </div>
 
@@ -58,12 +100,12 @@
         </div>
 
         <div class="form-group">
-            <label for="type1">نوع الفيلم 1</label>
+            <label for="type1">نوع الفيلم مثل (دراما,اكشن)</label>
             <input type="text" id="type1" placeholder="أدخل نوع الفيلم 1">
         </div>
 
         <div class="form-group">
-            <label for="type2">نوع الفيلم 2</label>
+            <label for="type2">نوع الفيلم مثل (دراما,اكشن)</label>
             <input type="text" id="type2" placeholder="أدخل نوع الفيلم 2">
         </div>
 
@@ -73,12 +115,12 @@
         </div>
 
         <div class="form-group">
-            <label for="typeLink1">رابط نوع الفيلم 1</label>
+            <label for="typeLink1">ضع رابط تصنيف الفيلم اذا كان دراما ضع رابطة</label>
             <input type="text" id="typeLink1" placeholder="أدخل رابط نوع الفيلم 1">
         </div>
 
         <div class="form-group">
-            <label for="typeLink2">رابط نوع الفيلم 2</label>
+            <label for="typeLink2">ضع رابط تصنيف الفيلم اذا كان اكشن ضع رابطة</label>
             <input type="text" id="typeLink2" placeholder="أدخل رابط نوع الفيلم 2">
         </div>
 
